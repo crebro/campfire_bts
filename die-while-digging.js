@@ -430,7 +430,8 @@ function updateSand() {
       // We check center-bottom
       if (player.isOverVoid(s.x + s.w / 2, s.y + s.h + 5)) {
         s.isFalling = true;
-        if (assets.sounds.sandFall && !assets.sounds.sandFall.isPlaying()) {
+        // Only play sound if game has been running for a bit (settling period)
+        if (frameCount > 120 && assets.sounds.sandFall && !assets.sounds.sandFall.isPlaying()) {
           assets.sounds.sandFall.play();
         }
       }

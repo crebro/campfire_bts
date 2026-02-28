@@ -387,12 +387,15 @@ function drawUI() {
     fill(255, 255, 255, 217);
     text('DEPTH', 20, 80);
 
+    push();
+    stroke(2);
     textSize(24);
     fill(150, 200, 255);
     if (highPressure) {
         fill(255, 150, 0); // Orange when in high pressure
     }
     text(depth + 'm', 20, 100);
+    pop();
 
     // Health bar (top left, below depth)
     textAlign(LEFT, TOP);

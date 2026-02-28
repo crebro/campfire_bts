@@ -22,14 +22,69 @@
             </div>
         </div>
         <div class="die-sections">
-            <a href="die-while-swimming.html">
-                <div class="die-water">Die under-water</div>
-            </a>
-            <a href="die-while-digging.html">
-                <div class="die-ground">Die under-ground</div>
-            </a>
+            <div class="die-card water-card">
+                <a href="die-while-swimming.html">
+                    <div class="die-water">Die under-water</div>
+                </a>
+                <button class="hint-btn" onclick="showHint('water', event)">?</button>
+            </div>
+            <div class="die-card ground-card">
+                <a href="die-while-digging.html">
+                    <div class="die-ground">Die under-ground</div>
+                </a>
+                <button class="hint-btn" onclick="showHint('ground', event)">?</button>
+            </div>
         </div>
     </div>
+
+    <!-- Hint Modal -->
+    <div id="hint-modal" class="modal-overlay" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div id="modal-body">
+                <!-- Hint content injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const hints = {
+            water: {
+                title: "Water Mission Clues",
+                points: [
+                    "I probably should stay away from the iceberg to not die",
+                    "More depth = High pressure"
+                ]
+            },
+            ground: {
+                title: "Underground Mission Clues",
+                points: [
+                    "You will suffocate at higher depths"
+                ]
+            }
+        };
+
+        function showHint(mission, event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            const hint = hints[mission];
+            const body = document.getElementById('modal-body');
+
+            let html = `<h2>${hint.title}</h2><ul>`;
+            hint.points.forEach(point => {
+                html += `<li>${point}</li>`;
+            });
+            html += `</ul>`;
+
+            body.innerHTML = html;
+            document.getElementById('hint-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('hint-modal').classList.remove('active');
+        }
+    </script>
 
     <style>
         @font-face {
@@ -123,6 +178,122 @@
         a {
             text-decoration: none;
             color: white;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .die-card {
+            position: relative;
+            width: 50vw;
+            height: 50vh;
+            overflow: hidden;
+        }
+
+        .hint-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-family: 'PixelifySans';
+            font-size: 24px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .hint-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            position: relative;
+            color: white;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: 0.3s;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
+        }
+
+        #modal-body h2 {
+            margin-bottom: 20px;
+            font-size: 32px;
+            color: #03c2fc;
+            text-shadow: 0 0 10px rgba(3, 194, 252, 0.3);
+        }
+
+        #modal-body ul {
+            list-style: none;
+        }
+
+        #modal-body li {
+            margin-bottom: 15px;
+            font-size: 20px;
+            line-height: 1.4;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        #modal-body li::before {
+            content: '>';
+            position: absolute;
+            left: 0;
+            color: #fc0335;
         }
     </style>
 

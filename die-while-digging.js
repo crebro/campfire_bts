@@ -308,7 +308,8 @@ function keyPressed() {
     player.leftFlip = false;
   }
 
-  if (player.isDead && (key == 'r' || key == 'R')) {
+  let allDead = deathChecklist.fall && deathChecklist.sand && deathChecklist.oxygen;
+  if (player.isDead && (key == 'r' || key == 'R') && !allDead) {
     restartGame();
   }
 }
@@ -384,18 +385,25 @@ function drawGameOver() {
     text("YOU ARE FINALLY DEAD!", width / 2, height / 2 - 80);
     textSize(30);
     fill(255);
-    text("You achieved all death goals. Victory!", width / 2, height / 2);
+    text("You experienced all underground deaths.", width / 2, height / 2);
+
+    textSize(15);
+    fill(255);
+    text("Click to return to home", width / 2, height / 2 + 50);
+    pop();
   } else {
     textSize(50);
     text("GAME OVER", width / 2, height / 2 - 50);
     textSize(20);
     text(player.deathReason, width / 2, height / 2);
+
+    textSize(15);
+    fill(255);
+    text("Press 'R' to Restart", width / 2, height / 2 + 50);
+    pop();
   }
 
-  textSize(15);
-  fill(255);
-  text("Press 'R' to Restart", width / 2, height / 2 + 50);
-  pop();
+
 }
 
 function generateCaves() {
@@ -517,4 +525,12 @@ setup = function () {
   noSmooth();
   generateCaves();
   generateSand();
+}
+
+function mousePressed() {
+  let allDead = deathChecklist.fall && deathChecklist.sand && deathChecklist.oxygen;
+  if (allDead) {
+    // Return to home page when victory screen is shown
+    window.location.href = 'index.html';
+  }
 }

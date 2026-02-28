@@ -539,11 +539,11 @@ function drawUI() {
             // Victory screen
             fill(50, 255, 50);
             textSize(64);
-            text('MISSION COMPLETE!', width / 2, height / 2 - 80);
+            text('YOU ARE FINALLY DEAD!', width / 2, height / 2 - 80);
 
             fill(255, 255, 255);
             textSize(24);
-            text('You have experienced all the underwater detahs!', width / 2, height / 2 - 20);
+            text('You have experienced all underwater deaths!', width / 2, height / 2 - 20);
 
             textSize(20);
             text('✓ Suffocated', width / 2, height / 2 + 30);

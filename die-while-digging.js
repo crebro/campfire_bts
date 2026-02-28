@@ -532,13 +532,15 @@ function updateSand() {
       }
     }
 
-    // Check for suffocation (player's upper half is substantially inside sand)
-    if (player.x + playerSize * 0.4 < s.x + s.w &&
-      player.x + playerSize * 0.6 > s.x &&
-      player.y + playerSize * 0.1 < s.y + s.h &&
-      player.y + playerSize * 0.4 > s.y) {
-      player.isSuffocating = true;
-    }
+    // Commented out code for suffocation (oxygen reduction) by sand
+
+    // // Check for suffocation (player's head area - top 40% - is substantially inside sand)
+    // if (player.x + playerSize * 0.3 < s.x + s.w &&
+    //   player.x + playerSize * 0.7 > s.x &&
+    //   player.y < s.y + s.h &&
+    //   player.y + playerSize * 0.4 > s.y) {
+    //   player.isSuffocating = true;
+    // }
   }
 
   if (player.isSuffocating) {

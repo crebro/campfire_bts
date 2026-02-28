@@ -39,6 +39,7 @@ class Player {
         if (this.health <= 0) {
           this.isDead = true;
           this.deathReason = "Sudden deceleration (Fall Damage)";
+          deathChecklist.fall = true;
         }
       }
       this.velocity = 0;
@@ -60,7 +61,8 @@ class Player {
 
     if (this.oxygen <= 0) {
       this.isDead = true;
-      this.deathReason = "Insufficient Oxygen";
+      this.deathReason = this.isSuffocating ? "Suffocated in Sand" : "Insufficient Oxygen";
+      deathChecklist.oxygen = true;
     }
   }
 
@@ -127,6 +129,12 @@ let earthTitle;
 let caveBlocks = [];
 let sandBlocks = [];
 let sandSize = 50;
+
+let deathChecklist = {
+  fall: false,
+  sand: false,
+  oxygen: false
+};
 
 function preload() {
   for (let i = 0; i < 6; i++) {
@@ -310,7 +318,27 @@ function drawUI() {
   let depth = Math.floor(Math.max(0, (player.y + playerSize - height / 2) / 10));
   textSize(20);
   text(`Depth: ${depth}m`, 20, 100);
+
+  // --- Death Checklist UI ---
+  let checklistX = width - 250;
+  let checklistY = 30;
+  fill(0, 100);
+  rect(checklistX - 10, checklistY - 10, 240, 110, 5);
+  fill(255);
+  textSize(16);
+  textAlign(LEFT, TOP);
+  text("OBJECTIVE: DIE ALL WAYS", checklistX, checklistY);
+
+  textSize(14);
+  drawCheckItem("1. Fall Damage", deathChecklist.fall, checklistX, checklistY + 25);
+  drawCheckItem("2. Crushed by Sand", deathChecklist.sand, checklistX, checklistY + 45);
+  drawCheckItem("3. Suffocation/O2", deathChecklist.oxygen, checklistX, checklistY + 65);
+
   pop();
+}
+
+function drawCheckItem(label, checked, x, y) {
+  text(checked ? "[X] " + label : "[  ] " + label, x, y);
 }
 
 function drawGameOver() {
@@ -319,11 +347,25 @@ function drawGameOver() {
   rect(0, 0, width, height);
   fill(255);
   textAlign(CENTER, CENTER);
-  textSize(50);
-  text("GAME OVER", width / 2, height / 2 - 50);
-  textSize(20);
-  text(player.deathReason, width / 2, height / 2);
+
+  let allDead = deathChecklist.fall && deathChecklist.sand && deathChecklist.oxygen;
+
+  if (allDead) {
+    textSize(60);
+    fill(255, 215, 0); // Gold
+    text("YOU ARE FINALLY DEAD!", width / 2, height / 2 - 80);
+    textSize(30);
+    fill(255);
+    text("You achieved all death goals. Victory!", width / 2, height / 2);
+  } else {
+    textSize(50);
+    text("GAME OVER", width / 2, height / 2 - 50);
+    textSize(20);
+    text(player.deathReason, width / 2, height / 2);
+  }
+
   textSize(15);
+  fill(255);
   text("Press 'R' to Restart", width / 2, height / 2 + 50);
   pop();
 }
@@ -393,6 +435,7 @@ function updateSand() {
           if (player.health <= 0) {
             player.isDead = true;
             player.deathReason = "Crushed by Falling Sand";
+            deathChecklist.sand = true;
           }
         }
       }

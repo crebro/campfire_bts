@@ -331,25 +331,25 @@ function drawUI() {
   // Health Bar
   noStroke();
   fill(0, 100);
-  rect(20, 20, 200, 20);
+  rect(20, 80, 200, 20); // Shifted down from 20
   fill(255, 50, 50);
-  rect(20, 20, map(player.health, 0, 100, 0, 200), 20);
+  rect(20, 80, map(player.health, 0, 100, 0, 200), 20);
   fill(255);
   textSize(14);
-  text("HEALTH", 25, 35);
+  text("HEALTH", 25, 95);
 
   // Oxygen Bar
   fill(0, 100);
-  rect(20, 50, 200, 20);
+  rect(20, 110, 200, 20); // Shifted down from 50
   fill(50, 150, 255);
-  rect(20, 50, map(player.oxygen, 0, 100, 0, 200), 20);
+  rect(20, 110, map(player.oxygen, 0, 100, 0, 200), 20);
   fill(255);
-  text("OXYGEN", 25, 65);
+  text("OXYGEN", 25, 125);
 
   // Depth
   let depth = Math.floor(Math.max(0, (player.y + playerSize - height / 2) / 10));
   textSize(20);
-  text(`Depth: ${depth}m`, 20, 100);
+  text(`Depth: ${depth}m`, 20, 160); // Shifted down from 100
 
   // --- Death Checklist UI ---
   let checklistX = width - 250;
@@ -367,8 +367,8 @@ function drawUI() {
   drawCheckItem("3. Suffocation/O2", deathChecklist.oxygen, checklistX, checklistY + 65);
 
   // --- Home Button ---
-  let homeBtnX = width - 110;
-  let homeBtnY = 160;
+  let homeBtnX = 20;
+  let homeBtnY = 20;
   let homeBtnW = 100;
   let homeBtnH = 40;
 
@@ -382,6 +382,16 @@ function drawUI() {
   textAlign(CENTER, CENTER);
   textSize(16);
   text("HOME", homeBtnX + homeBtnW / 2, homeBtnY + homeBtnH / 2);
+
+  // Hint text background
+  fill(0, 100);
+  rect(homeBtnX + homeBtnW + 10, homeBtnY + 5, 230, 30, 5);
+
+  // Hint text
+  textSize(12);
+  textAlign(LEFT, CENTER);
+  fill(255, 200);
+  text("'hints' available on home screen", homeBtnX + homeBtnW + 20, homeBtnY + homeBtnH / 2);
 
   pop();
 }
@@ -564,8 +574,8 @@ setup = function () {
 
 function mousePressed() {
   // Check Home Button
-  let homeBtnX = width - 110;
-  let homeBtnY = 160;
+  let homeBtnX = 20;
+  let homeBtnY = 20;
   let homeBtnW = 100;
   let homeBtnH = 40;
 

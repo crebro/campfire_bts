@@ -468,8 +468,8 @@ function drawUI() {
     pop();
 
     // --- Home Button ---
-    let homeBtnX = width - 110;
-    let homeBtnY = 200;
+    let homeBtnX = 20;
+    let homeBtnY = 20;
     let homeBtnW = 100;
     let homeBtnH = 40;
 
@@ -484,6 +484,16 @@ function drawUI() {
     textAlign(CENTER, CENTER);
     textSize(16);
     text("HOME", homeBtnX + homeBtnW / 2, homeBtnY + homeBtnH / 2);
+
+    // Hint text background
+    fill(0, 100);
+    rect(homeBtnX + homeBtnW + 10, homeBtnY + 5, 230, 30, 5);
+
+    // Hint text
+    textSize(12);
+    textAlign(LEFT, CENTER);
+    fill(255, 200);
+    text("'hints' available on home screen", homeBtnX + homeBtnW + 20, homeBtnY + homeBtnH / 2);
     pop();
 
     // Warning text if leaking
@@ -733,8 +743,8 @@ function updateKeys(pressed) {
 
 function mousePressed() {
     // Check Home Button
-    let homeBtnX = width - 110;
-    let homeBtnY = 200;
+    let homeBtnX = 20;
+    let homeBtnY = 20;
     let homeBtnW = 100;
     let homeBtnH = 40;
 

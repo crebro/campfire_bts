@@ -1,18 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Sketch</title>
+</head>
 
-    <link rel="stylesheet" type="text/css" href="style.css">
+<body>
+    <div class="container">
+        <div class="die-title">
+            <div class="titular">
+                Die beneath the surface
+            </div>
+            <div class="titular-explain">
+                There are lots of ways to die beneath the surface, your objective today is to
+            </div>
+            <div class="titular-die">
+                Die!
+            </div>
+        </div>
+        <div class="die-sections">
+            <div class="die-water">Die under-water</div>
+            <a href="/die-while-digging.html">
+                <div class="die-ground">Die under-ground</div>
+            </a>
+        </div>
+    </div>
 
-    <script src="libraries/p5.min.js"></script>
-    <script src="libraries/p5.sound.min.js"></script>
-  </head>
+    <style>
+        @font-face {
+            font-family: 'PixelifySans';
+            /* A name you choose to use in your CSS */
+            src: url('/assets/fonts/pixelify-sans.ttf');
+            font-weight: normal;
+            /* Define the weight of this specific file */
+            font-style: normal;
+            /* Define the style of this specific file */
+            font-display: swap;
+            /* Controls how the font loads to prevent invisible text */
+        }
 
-  <body>
-    <script src="sketch.js"></script>
-  </body>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'PixelifySans';
+        }
+
+        .titular {
+            font-size: 42px;
+        }
+
+        .titular-die {
+            font-size: 70px;
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .die-sections {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            height: 50vh;
+            width: 100vw;
+        }
+
+        .die-title {
+            display: flex;
+            flex-direction: column;
+            height: 50vh;
+            width: 100vw;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .die-water {
+            font-size: 20px;
+            background-color: #03c2fc;
+            width: 50vw;
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition-duration: 200ms;
+            cursor: pointer;
+        }
+
+        .die-water:hover {
+            color: #fc0335;
+        }
+
+        .die-ground {
+            font-size: 20px;
+            background-color: #755a35;
+            width: 50vw;
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition-duration: 200ms;
+        }
+
+        .die-ground:hover {
+            color: #fc0335;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+    </style>
+
+</body>
+
 </html>

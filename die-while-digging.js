@@ -94,9 +94,17 @@ class Player {
       XDrawLocation = width - this.x - playerSize;
     }
 
-    if (this.playerStatus == playerStatuses.RUNNING) {
+    if (this.playerStatus == playerStatuses.RUNNING && !this.isDead) {
       image(this.playerAssets.run[this.animationIndex % this.runAnimationItems], XDrawLocation, this.y, 100, 100);
+      if (assets.sounds.walking && !assets.sounds.walking.isPlaying()) {
+        assets.sounds.walking.loop();
+      }
+    } else {
+      if (assets.sounds.walking && assets.sounds.walking.isPlaying()) {
+        assets.sounds.walking.stop();
+      }
     }
+
     if (this.playerStatus == playerStatuses.IDLE) {
       image(this.playerAssets.idle[this.animationIndex % this.idleAnimationItems], XDrawLocation, this.y, 100, 100);
     }
@@ -119,7 +127,8 @@ let assets = {
   player: {
     run: [],
     idle: []
-  }
+  },
+  sounds: {}
 }
 let digSpeed = 20;
 let animationDivision = 10;
@@ -148,6 +157,9 @@ function preload() {
   }
 
   earthTitle = loadImage('assets/earth-title.png');
+
+  assets.sounds.walking = loadSound('assets/sounds/walking-dirt.mp3');
+  assets.sounds.sandFall = loadSound('assets/sounds/sand-fall.mp3');
 }
 
 function setup() {
@@ -418,6 +430,9 @@ function updateSand() {
       // We check center-bottom
       if (player.isOverVoid(s.x + s.w / 2, s.y + s.h + 5)) {
         s.isFalling = true;
+        if (assets.sounds.sandFall && !assets.sounds.sandFall.isPlaying()) {
+          assets.sounds.sandFall.play();
+        }
       }
     } else {
       let prevY = s.y;

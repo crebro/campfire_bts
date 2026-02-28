@@ -467,6 +467,25 @@ function drawUI() {
     }
     pop();
 
+    // --- Home Button ---
+    let homeBtnX = width - 110;
+    let homeBtnY = 200;
+    let homeBtnW = 100;
+    let homeBtnH = 40;
+
+    push();
+    fill(0, 150);
+    stroke(255, 100);
+    strokeWeight(2);
+    rect(homeBtnX, homeBtnY, homeBtnW, homeBtnH, 5);
+
+    noStroke();
+    fill(255);
+    textAlign(CENTER, CENTER);
+    textSize(16);
+    text("HOME", homeBtnX + homeBtnW / 2, homeBtnY + homeBtnH / 2);
+    pop();
+
     // Warning text if leaking
     if (showLeakWarning && millis() - leakWarningTime < 3000) {
         textAlign(CENTER, CENTER);
@@ -713,6 +732,18 @@ function updateKeys(pressed) {
 }
 
 function mousePressed() {
+    // Check Home Button
+    let homeBtnX = width - 110;
+    let homeBtnY = 200;
+    let homeBtnW = 100;
+    let homeBtnH = 40;
+
+    if (mouseX > homeBtnX && mouseX < homeBtnX + homeBtnW &&
+        mouseY > homeBtnY && mouseY < homeBtnY + homeBtnH) {
+        window.location.href = 'index.html';
+        return;
+    }
+
     if (!gameStarted) {
         gameStarted = true;
         // Start audio context

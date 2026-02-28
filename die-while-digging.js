@@ -145,6 +145,8 @@ let deathChecklist = {
   oxygen: false
 };
 
+let gameFrameCount = 0;
+
 function preload() {
   for (let i = 0; i < 6; i++) {
     assets.player.run.push(loadImage(`assets/player/run/run${i + 1}.png`));
@@ -156,7 +158,7 @@ function preload() {
     assets.player.idle[i].resize(100, 100);
   }
 
-  earthTitle = loadImage('assets/earth-title.png');
+  earthTitle = loadImage('assets/die-beneath-dig.png');
 
   assets.sounds.walking = loadSound('assets/sounds/walking-dirt.mp3');
   assets.sounds.sandFall = loadSound('assets/sounds/sand-fall.mp3');
@@ -222,6 +224,20 @@ function draw() {
   player.draw();
 
   pop();
+
+
+  // Hint text
+  push();
+  fill(255, 255, 255, 217);
+  textAlign(CENTER, TOP);
+  textSize(12);
+  noStroke();
+  fill(0, 0, 0, 38);
+  rect(width / 2 - 100, 18, 200, 24, 2);
+  fill(255, 255, 255, 217);
+  text("ARROWS → DIG | YOU CAN'T JUMP", width / 2, 24);
+  pop();
+
 
   // --- UI Layer ---
   drawUI();
@@ -431,7 +447,7 @@ function updateSand() {
       if (player.isOverVoid(s.x + s.w / 2, s.y + s.h + 5)) {
         s.isFalling = true;
         // Only play sound if game has been running for a bit (settling period)
-        if (frameCount > 120 && assets.sounds.sandFall && !assets.sounds.sandFall.isPlaying()) {
+        if (gameFrameCount > 120 && assets.sounds.sandFall && !assets.sounds.sandFall.isPlaying()) {
           assets.sounds.sandFall.play();
         }
       }
@@ -475,6 +491,8 @@ function updateSand() {
   if (player.isSuffocating) {
     // Show visual indicator or handled via oxygen meter
   }
+
+  gameFrameCount++;
 }
 
 function restartGame() {
@@ -485,6 +503,7 @@ function restartGame() {
   player.velocity = 0;
   player.isDead = false;
   player.deathReason = "";
+  gameFrameCount = 0;
   digcircles = [];
   sandBlocks = [];
   generateSand();

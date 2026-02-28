@@ -1,8 +1,10 @@
 // Pixel Diver - p5.js version
 
 let diverImg1, diverImg2;
+let swimTitle;
 let swimmingSound;
 let drowningSound;
+let crashSound;
 let currentFrame = 0;
 let x, y;
 let vx = 0, vy = 0;
@@ -57,6 +59,8 @@ function preload() {
     diverImg2 = loadImage('water_assets/11281.png');
     swimmingSound = loadSound('water_assets/Slow Breaststroke Swimming  Sound Effect.mp3');
     drowningSound = loadSound('water_assets/drowning.mp3');
+    crashSound = loadSound('water_assets/metallic_clash.wav');
+    swimTitle = loadImage('water_assets/die-beneath-swim.png');
 }
 
 function setup() {
@@ -93,9 +97,9 @@ function draw() {
         fill(255);
         textAlign(CENTER, CENTER);
         textSize(48);
-        text('DUMB WAYS TO DIE', width / 2, height / 2 - 100);
+        text('DIE BENEATH THE SURFACE', width / 2, height / 2 - 100);
         textSize(32);
-        text('Water Mission', width / 2, height / 2 - 50);
+        text('Die under-water', width / 2, height / 2 - 50);
         textSize(24);
         text('Click to Start', width / 2, height / 2 + 20);
         textSize(16);
@@ -106,8 +110,8 @@ function draw() {
         textAlign(LEFT, TOP);
         fill(255, 255, 255, 200);
         text('Mission Objectives:', width / 2 - 120, height / 2 + 110);
-        text('☐ Die from Suffocation', width / 2 - 120, height / 2 + 140);
-        text('☐ Die from High Pressure', width / 2 - 120, height / 2 + 170);
+        text('[ ] Die from Suffocation', width / 2 - 120, height / 2 + 140);
+        text('[ ] Die from High Pressure', width / 2 - 120, height / 2 + 170);
         return;
     }
 
@@ -130,6 +134,14 @@ function draw() {
 
     // Draw shadow
     drawShadow();
+
+    // Draw title image at the top
+    if (swimTitle) {
+        push();
+        imageMode(CENTER);
+        image(swimTitle, width / 2, 200, swimTitle.width * 2, swimTitle.height * 2);
+        pop();
+    }
 
     // Draw iceberg
     drawIceberg();
@@ -202,17 +214,11 @@ function updatePhysics() {
             drowningSound.loop();
         }
 
-        // If oxygen runs out, drain health
+        // If oxygen runs out, player dies immediately
         if (oxygen <= 0) {
-            health -= HEALTH_DRAIN_RATE * dt;
-            health = max(0, health);
-
-            // Player dies from suffocation
-            if (health <= 0) {
-                isDead = true;
-                deathCause = 'suffocate';
-                objectives.suffocate = true;
-            }
+            isDead = true;
+            deathCause = 'suffocate';
+            objectives.suffocate = true;
         }
     } else {
         // Stop drowning sound when not leaking
@@ -412,20 +418,20 @@ function drawUI() {
     fill(220, 50, 50);
     rect(20, 160, 200 * (health / 100), 20, 3);
 
-    // Oxygen bar (top right)
-    textAlign(RIGHT, TOP);
+    // Oxygen bar (top left, below health)
+    textAlign(LEFT, TOP);
     textSize(12);
     fill(255, 255, 255, 217);
-    text('OXYGEN', width - 20, 20);
+    text('OXYGEN', 20, 200);
 
     noFill();
     stroke(255, 255, 255, 100);
     strokeWeight(2);
-    rect(width - 220, 40, 200, 20, 3);
+    rect(20, 220, 200, 20, 3);
 
     noStroke();
     fill(30, 60, 120); // Dark blue
-    rect(width - 220, 40, 200 * (oxygen / 100), 20, 3);
+    rect(20, 220, 200 * (oxygen / 100), 20, 3);
 
     // Objectives checklist (top right, below oxygen)
     push();
@@ -442,18 +448,18 @@ function drawUI() {
     textSize(14);
     if (objectives.suffocate) {
         fill(50, 255, 50);
-        text('☑ Suffocate', width - 225, 115);
+        text('[X] Suffocate', width - 225, 115);
     } else {
         fill(255, 255, 255, 200);
-        text('☐ Suffocate', width - 225, 115);
+        text('[ ] Suffocate', width - 225, 115);
     }
 
     if (objectives.highPressure) {
         fill(50, 255, 50);
-        text('☑ High Pressure', width - 225, 145);
+        text('[X] High Pressure', width - 225, 145);
     } else {
         fill(255, 255, 255, 200);
-        text('☐ High Pressure', width - 225, 145);
+        text('[ ] High Pressure', width - 225, 145);
     }
     pop();
 
@@ -537,7 +543,7 @@ function drawUI() {
 
             fill(255, 255, 255);
             textSize(24);
-            text('You experienced all the dumb ways to die underwater!', width / 2, height / 2 - 20);
+            text('You have experienced all the underwater detahs!', width / 2, height / 2 - 20);
 
             textSize(20);
             text('✓ Suffocated', width / 2, height / 2 + 30);
@@ -709,7 +715,7 @@ function mousePressed() {
         userStartAudio();
     } else if (showVictory) {
         // Return to home page when victory screen is shown
-        window.location.href = 'water.html';
+        window.location.href = 'index.html';
     }
 }
 
@@ -777,26 +783,29 @@ function checkIcebergCollision() {
             oxygenLeaking = true;
             showLeakWarning = true;
             leakWarningTime = millis();
+            if (crashSound) {
+                crashSound.play();
+            }
         }
     }
 }
 
 function getIcebergPoints() {
-    // Return the exact polygon points of the iceberg
+    // Return the inverted polygon points of the iceberg (wide at top)
     return [
-        { x: icebergX + icebergWidth * 0.5, y: icebergY },
-        { x: icebergX + icebergWidth * 0.7, y: icebergY + icebergHeight * 0.15 },
-        { x: icebergX + icebergWidth * 0.85, y: icebergY + icebergHeight * 0.25 },
-        { x: icebergX + icebergWidth, y: icebergY + icebergHeight * 0.4 },
-        { x: icebergX + icebergWidth * 0.95, y: icebergY + icebergHeight * 0.6 },
-        { x: icebergX + icebergWidth * 0.9, y: icebergY + icebergHeight * 0.8 },
-        { x: icebergX + icebergWidth * 0.85, y: icebergY + icebergHeight },
-        { x: icebergX + icebergWidth * 0.15, y: icebergY + icebergHeight },
-        { x: icebergX + icebergWidth * 0.1, y: icebergY + icebergHeight * 0.8 },
-        { x: icebergX + icebergWidth * 0.05, y: icebergY + icebergHeight * 0.6 },
-        { x: icebergX, y: icebergY + icebergHeight * 0.35 },
-        { x: icebergX + icebergWidth * 0.15, y: icebergY + icebergHeight * 0.2 },
-        { x: icebergX + icebergWidth * 0.3, y: icebergY + icebergHeight * 0.1 }
+        { x: icebergX + icebergWidth * 0.5, y: icebergY + icebergHeight },
+        { x: icebergX + icebergWidth * 0.7, y: icebergY + icebergHeight * 0.85 },
+        { x: icebergX + icebergWidth * 0.85, y: icebergY + icebergHeight * 0.75 },
+        { x: icebergX + icebergWidth, y: icebergY + icebergHeight * 0.6 },
+        { x: icebergX + icebergWidth * 0.95, y: icebergY + icebergHeight * 0.4 },
+        { x: icebergX + icebergWidth * 0.9, y: icebergY + icebergHeight * 0.2 },
+        { x: icebergX + icebergWidth * 0.85, y: icebergY },
+        { x: icebergX + icebergWidth * 0.15, y: icebergY },
+        { x: icebergX + icebergWidth * 0.1, y: icebergY + icebergHeight * 0.2 },
+        { x: icebergX + icebergWidth * 0.05, y: icebergY + icebergHeight * 0.4 },
+        { x: icebergX, y: icebergY + icebergHeight * 0.65 },
+        { x: icebergX + icebergWidth * 0.15, y: icebergY + icebergHeight * 0.8 },
+        { x: icebergX + icebergWidth * 0.3, y: icebergY + icebergHeight * 0.9 }
     ];
 }
 
@@ -821,53 +830,42 @@ function drawIceberg() {
     noStroke();
     fill(200, 230, 255);
 
-    // Main iceberg shape (large irregular shape from top)
+    // Inverted iceberg shape
     beginShape();
-    vertex(icebergX + icebergWidth * 0.5, icebergY);
-    vertex(icebergX + icebergWidth * 0.7, icebergY + icebergHeight * 0.15);
-    vertex(icebergX + icebergWidth * 0.85, icebergY + icebergHeight * 0.25);
-    vertex(icebergX + icebergWidth, icebergY + icebergHeight * 0.4);
-    vertex(icebergX + icebergWidth * 0.95, icebergY + icebergHeight * 0.6);
-    vertex(icebergX + icebergWidth * 0.9, icebergY + icebergHeight * 0.8);
-    vertex(icebergX + icebergWidth * 0.85, icebergY + icebergHeight);
-    vertex(icebergX + icebergWidth * 0.15, icebergY + icebergHeight);
-    vertex(icebergX + icebergWidth * 0.1, icebergY + icebergHeight * 0.8);
-    vertex(icebergX + icebergWidth * 0.05, icebergY + icebergHeight * 0.6);
-    vertex(icebergX, icebergY + icebergHeight * 0.35);
-    vertex(icebergX + icebergWidth * 0.15, icebergY + icebergHeight * 0.2);
-    vertex(icebergX + icebergWidth * 0.3, icebergY + icebergHeight * 0.1);
+    let pts = getIcebergPoints();
+    for (let p of pts) vertex(p.x, p.y);
     endShape(CLOSE);
 
-    // Highlights (bright white areas)
+    // Highlights (bright white areas) - flipped
     fill(255, 255, 255, 180);
     beginShape();
-    vertex(icebergX + icebergWidth * 0.5, icebergY);
-    vertex(icebergX + icebergWidth * 0.65, icebergY + icebergHeight * 0.15);
-    vertex(icebergX + icebergWidth * 0.55, icebergY + icebergHeight * 0.25);
-    vertex(icebergX + icebergWidth * 0.45, icebergY + icebergHeight * 0.2);
+    vertex(icebergX + icebergWidth * 0.5, icebergY + icebergHeight);
+    vertex(icebergX + icebergWidth * 0.65, icebergY + icebergHeight * 0.85);
+    vertex(icebergX + icebergWidth * 0.55, icebergY + icebergHeight * 0.75);
+    vertex(icebergX + icebergWidth * 0.45, icebergY + icebergHeight * 0.8);
     endShape(CLOSE);
 
     beginShape();
-    vertex(icebergX + icebergWidth * 0.2, icebergY + icebergHeight * 0.3);
-    vertex(icebergX + icebergWidth * 0.3, icebergY + icebergHeight * 0.35);
+    vertex(icebergX + icebergWidth * 0.2, icebergY + icebergHeight * 0.7);
+    vertex(icebergX + icebergWidth * 0.3, icebergY + icebergHeight * 0.65);
     vertex(icebergX + icebergWidth * 0.25, icebergY + icebergHeight * 0.5);
-    vertex(icebergX + icebergWidth * 0.15, icebergY + icebergHeight * 0.45);
+    vertex(icebergX + icebergWidth * 0.15, icebergY + icebergHeight * 0.55);
     endShape(CLOSE);
 
-    // Shadows (darker blue areas)
+    // Shadows (darker blue areas) - flipped
     fill(150, 180, 200, 120);
     beginShape();
-    vertex(icebergX + icebergWidth * 0.85, icebergY + icebergHeight * 0.25);
-    vertex(icebergX + icebergWidth, icebergY + icebergHeight * 0.4);
-    vertex(icebergX + icebergWidth * 0.95, icebergY + icebergHeight * 0.6);
+    vertex(icebergX + icebergWidth * 0.85, icebergY + icebergHeight * 0.75);
+    vertex(icebergX + icebergWidth, icebergY + icebergHeight * 0.6);
+    vertex(icebergX + icebergWidth * 0.95, icebergY + icebergHeight * 0.4);
     vertex(icebergX + icebergWidth * 0.8, icebergY + icebergHeight * 0.5);
     endShape(CLOSE);
 
     beginShape();
-    vertex(icebergX + icebergWidth * 0.1, icebergY + icebergHeight * 0.8);
-    vertex(icebergX + icebergWidth * 0.15, icebergY + icebergHeight);
-    vertex(icebergX + icebergWidth * 0.3, icebergY + icebergHeight * 0.95);
-    vertex(icebergX + icebergWidth * 0.25, icebergY + icebergHeight * 0.75);
+    vertex(icebergX + icebergWidth * 0.1, icebergY + icebergHeight * 0.2);
+    vertex(icebergX + icebergWidth * 0.15, icebergY);
+    vertex(icebergX + icebergWidth * 0.3, icebergY + icebergHeight * 0.05);
+    vertex(icebergX + icebergWidth * 0.25, icebergY + icebergHeight * 0.25);
     endShape(CLOSE);
 
     // Cracks and details

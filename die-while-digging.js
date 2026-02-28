@@ -396,17 +396,31 @@ function drawGameOver() {
     pop();
   } else {
     textSize(50);
-    text("GAME OVER", width / 2, height / 2 - 50);
+    text("DEAD!", width / 2, height / 2 - 100);
     textSize(20);
-    text(player.deathReason, width / 2, height / 2);
+    text(player.deathReason, width / 2, height / 2 - 20);
+
+    // Death Checklist on Game Over
+    let startY = height / 2 + 20;
+    textSize(16);
+
+    // Fall Damage
+    fill(deathChecklist.fall ? "rgb(50, 255, 50)" : "rgb(255, 255, 255)");
+    text(deathChecklist.fall ? "[X] Fall Damage" : "[ ] Fall Damage", width / 2, startY);
+
+    // Crushed by Sand
+    fill(deathChecklist.sand ? "rgb(50, 255, 50)" : "rgb(255, 255, 255)");
+    text(deathChecklist.sand ? "[X] Crushed by Sand" : "[ ] Crushed by Sand", width / 2, startY + 25);
+
+    // Oxygen
+    fill(deathChecklist.oxygen ? "rgb(50, 255, 50)" : "rgb(255, 255, 255)");
+    text(deathChecklist.oxygen ? "[X] Insufficient Oxygen" : "[ ] Insufficient Oxygen", width / 2, startY + 50);
 
     textSize(15);
     fill(255);
-    text("Press 'R' to Restart", width / 2, height / 2 + 50);
+    text("Press 'R' to Restart", width / 2, height / 2 + 100);
     pop();
   }
-
-
 }
 
 function generateCaves() {

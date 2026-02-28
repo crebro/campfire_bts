@@ -5,6 +5,7 @@ let swimTitle;
 let swimmingSound;
 let drowningSound;
 let crashSound;
+let deathSound;
 let currentFrame = 0;
 let x, y;
 let vx = 0, vy = 0;
@@ -61,6 +62,7 @@ function preload() {
     drowningSound = loadSound('water_assets/drowning.mp3');
     crashSound = loadSound('water_assets/metallic_clash.wav');
     swimTitle = loadImage('water_assets/die-beneath-swim.png');
+    deathSound = loadSound('assets/death.wav');
 }
 
 function setup() {
@@ -219,6 +221,7 @@ function updatePhysics() {
             isDead = true;
             deathCause = 'suffocate';
             objectives.suffocate = true;
+            if (deathSound) deathSound.play();
         }
     } else {
         // Stop drowning sound when not leaking
@@ -305,6 +308,7 @@ function updatePhysics() {
             isDead = true;
             deathCause = 'highPressure';
             objectives.highPressure = true;
+            if (deathSound) deathSound.play();
         }
     }
 

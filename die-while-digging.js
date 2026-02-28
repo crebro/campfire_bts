@@ -40,6 +40,7 @@ class Player {
           this.isDead = true;
           this.deathReason = "Sudden deceleration (Fall Damage)";
           deathChecklist.fall = true;
+          if (assets.sounds.death) assets.sounds.death.play();
         }
       }
       this.velocity = 0;
@@ -63,6 +64,7 @@ class Player {
       this.isDead = true;
       this.deathReason = this.isSuffocating ? "Suffocated in Sand" : "Insufficient Oxygen";
       deathChecklist.oxygen = true;
+      if (assets.sounds.death) assets.sounds.death.play();
     }
   }
 
@@ -162,6 +164,7 @@ function preload() {
 
   assets.sounds.walking = loadSound('assets/sounds/walking-dirt.mp3');
   assets.sounds.sandFall = loadSound('assets/sounds/sand-fall.mp3');
+  assets.sounds.death = loadSound('assets/death.wav');
 }
 
 function setup() {
@@ -476,6 +479,7 @@ function updateSand() {
             player.isDead = true;
             player.deathReason = "Crushed by Falling Sand";
             deathChecklist.sand = true;
+            if (assets.sounds.death) assets.sounds.death.play();
           }
         }
       }

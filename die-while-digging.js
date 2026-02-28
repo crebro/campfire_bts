@@ -48,6 +48,10 @@ class Player {
       // (This is a simplified check, ideally we find the exact circle edge)
     }
 
+    // --- Boundary Constraints ---
+    this.x = constrain(this.x, 0, width - playerSize);
+    this.y = constrain(this.y, height / 2 - playerSize, 10000);
+
     // --- Oxygen Logic ---
     let surfaceY = height / 2;
     let depth = Math.max(0, (this.y + playerSize - surfaceY) / 100);
@@ -264,6 +268,9 @@ function draw() {
     if (keyIsDown(LEFT_ARROW)) {
       player.x -= digSpeed;
     }
+
+    // --- Boundary Constraints ---
+    player.x = constrain(player.x, 0, width - playerSize);
 
     // --- Digging through Sand ---
     // Check if player's bounding box intersects with any sand block.

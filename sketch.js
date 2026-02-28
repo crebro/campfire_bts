@@ -138,16 +138,16 @@ let deathChecklist = {
 
 function preload() {
   for (let i = 0; i < 6; i++) {
-    assets.player.run.push(loadImage(`/assets/player/run/run${i + 1}.png`));
+    assets.player.run.push(loadImage(`assets/player/run/run${i + 1}.png`));
     assets.player.run[i].resize(100, 100);
   }
 
   for (let i = 0; i < 3; i++) {
-    assets.player.idle.push(loadImage(`/assets/player/idle/idle${i + 1}.png`));
+    assets.player.idle.push(loadImage(`assets/player/idle/idle${i + 1}.png`));
     assets.player.idle[i].resize(100, 100);
   }
 
-  earthTitle = loadImage('/assets/earth-title.png');
+  earthTitle = loadImage('assets/earth-title.png');
 }
 
 function setup() {
